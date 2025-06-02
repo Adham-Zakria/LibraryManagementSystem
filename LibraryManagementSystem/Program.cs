@@ -1,4 +1,6 @@
 using BusinessLogic.Profiles;
+using BusinessLogic.Services.Classes;
+using BusinessLogic.Services.Interfaces;
 using DataAccess.Contexts;
 using DataAccess.Repositories.Classes;
 using DataAccess.Repositories.Interfaces;
@@ -21,6 +23,10 @@ namespace LibraryManagementSystem
 
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(p => p.AddProfile(new LibraryProfile()));
+
+            builder.Services.AddScoped<IBorrowingService, BorrowingService>();
+            builder.Services.AddScoped<IAuthorService, AuthorService>();
+            builder.Services.AddScoped<IBookService, BookService>();
 
 
             #endregion
