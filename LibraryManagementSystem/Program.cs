@@ -1,4 +1,7 @@
+using BusinessLogic.Profiles;
 using DataAccess.Contexts;
+using DataAccess.Repositories.Classes;
+using DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace LibraryManagementSystem
@@ -9,10 +12,18 @@ namespace LibraryManagementSystem
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            #region Add services to the container.
+
             builder.Services.AddControllersWithViews();
+
             builder.Services.AddDbContext<LibraryDbContext>(options =>
                 options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
+
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddAutoMapper(p => p.AddProfile(new LibraryProfile()));
+
+
+            #endregion
 
             var app = builder.Build();
 
