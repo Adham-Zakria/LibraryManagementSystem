@@ -5,6 +5,8 @@ using DataAccess.Contexts;
 using DataAccess.Repositories.Classes;
 using DataAccess.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
+using System.Configuration;
 
 namespace LibraryManagementSystem
 {
@@ -24,9 +26,17 @@ namespace LibraryManagementSystem
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(p => p.AddProfile(new LibraryProfile()));
 
-            builder.Services.AddScoped<IBorrowingService, BorrowingService>();
             builder.Services.AddScoped<IAuthorService, AuthorService>();
             builder.Services.AddScoped<IBookService, BookService>();
+
+            builder.Services.AddSingleton<IConnectionMultiplexer>(options =>
+            {
+                var redisConnection = builder.Configuration.GetConnectionString("RedisConnection");
+                return ConnectionMultiplexer.Connect(redisConnection!);
+            });
+
+            builder.Services.AddScoped<IBookLibraryRepository, BookLibraryRepository>();
+            builder.Services.AddScoped<IBookLibraryService, BookLibraryService>();
 
 
             #endregion
