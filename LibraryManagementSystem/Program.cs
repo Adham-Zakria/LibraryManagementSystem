@@ -20,9 +20,9 @@ namespace LibraryManagementSystem
 
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddDbContext<LibraryDbContext>(options =>
+            builder.Services.AddDbContext<LibraryDbContext>(options => 
                 options.UseSqlServer(builder.Configuration["ConnectionStrings:DefaultConnection"]));
-
+                
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(p => p.AddProfile(new LibraryProfile()));
 

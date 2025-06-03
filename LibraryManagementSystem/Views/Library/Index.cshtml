@@ -1,0 +1,69 @@
+﻿@model List<BookDto>
+@{
+    ViewBag.Title = "Library";
+}
+<h2>Book Library</h2>
+
+<form method="get" class="row g-3 mb-3">
+    <div class="col-auto">
+        <select name="isBorrowed" class="form-control">
+            <option value="">All</option>
+            <option value="false">Available</option>
+            <option value="true">Borrowed</option>
+        </select>
+    </div>
+    <div class="col-auto">
+        <input type="date" name="borrowDate" class="form-control" placeholder="Borrow Date" />
+    </div>
+    <div class="col-auto">
+        <input type="date" name="returnDate" class="form-control" placeholder="Return Date" />
+    </div>
+    <div class="col-auto">
+        <button type="submit" class="btn btn-info">Filter</button>
+    </div>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Status</th>
+            <th>Borrowed</th>
+            <th>Returned</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var book in Model)
+
+        {
+            <tr>
+                <td>@book.Title</td>
+                <td>@book.AuthorName</td>
+                <td>
+                    @if (book.IsBorrowed)
+                    {
+                        <span class="badge bg-danger">Borrowed</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success">Available</span>
+                    }
+                </td>
+                <td>@(book.BorrowedDate?.ToString("g") ?? "-")</td>
+                <td>@(book.ReturnedDate?.ToString("g") ?? "-")</td>
+                <td>
+                    @if (!book.IsBorrowed)
+                    {
+                        <a asp-action="Borrow" asp-route-id="@book.Id" class="btn btn-sm btn-primary">Borrow</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Return" asp-route-id="@book.Id" class="btn btn-sm btn-warning">Return</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

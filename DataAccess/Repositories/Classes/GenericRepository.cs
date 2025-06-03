@@ -19,7 +19,7 @@ namespace DataAccess.Repositories.Classes
         public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
               => await _libraryDbContext.Set<TEntity>().AnyAsync(predicate);
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
               => await _libraryDbContext.Set<TEntity>().ToListAsync();
 
         public async Task<TEntity?> GetByIdAsync(int id)

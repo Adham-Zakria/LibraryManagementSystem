@@ -24,8 +24,7 @@ namespace BusinessLogic.Profiles
 
             // Book mappings
             CreateMap<Book, BookDto>()
-                .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.FullName))
-                .ForMember(dest => dest.AuthorName, opt => opt.Ignore());
+                .ForMember(dest => dest.AuthorName, opt => opt.MapFrom(src => src.Author.FullName));
 
             CreateMap<CreateBookDto, Book>();
             CreateMap<UpdateBookDto, Book>();

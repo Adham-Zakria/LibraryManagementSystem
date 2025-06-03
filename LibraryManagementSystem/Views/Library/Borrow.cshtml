@@ -1,0 +1,40 @@
+﻿@model BookDto
+@{
+    ViewBag.Title = "Borrow Book";
+}
+<h2>Borrow Book</h2>
+<form asp-action="BorrowConfirmed" asp-route-id="@Model.Id" method="post">
+    <div class="form-group">
+        <label>Title:</label>
+        <p>@Model.Title</p>
+    </div>
+    <div class="form-group">
+        <label>Author:</label>
+        <p>@Model.AuthorName</p>
+    </div>
+    <div id="bookStatus" class="alert mt-2"></div>
+
+    <button type="submit" class="btn btn-success mt-3" id="borrowBtn">Confirm Borrow</button>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
+</form>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function updateBookStatus(bookId) {
+            $.get('/Library/GetBookStatus', { id: bookId }, function (data) {
+                const status = data.isBorrowed ? "Checked Out" : "Available";
+                const statusClass = data.isBorrowed ? "alert-danger" : "alert-success";
+                $('#bookStatus').removeClass().addClass("alert " + statusClass).text(status);
+                $('#borrowBtn').prop('disabled', data.isBorrowed);
+            });
+        }
+
+        $(document).ready(function () {
+            updateBookStatus(@Model.Id);
+        });
+    </script>
+
+    @* - jQuery for real-time book status display
+       - Bootstrap badges for status styling *@
+}
