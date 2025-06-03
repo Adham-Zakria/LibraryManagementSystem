@@ -49,6 +49,21 @@ namespace DataAccess.Repositories.Classes
             return string.IsNullOrEmpty(json) ? null : JsonSerializer.Deserialize<Book>(json!);
         }
 
+        public async Task AddBookAsync(Book book)
+        {
+            var json = JsonSerializer.Serialize(book);
+            await _database.StringSetAsync($"book:{book.Id}", json);
+
+            // Workaround: manually check if the ID exists in the Redis list
+            var bookIds = await _database.ListRangeAsync("books:all");
+            bool alreadyExists = bookIds.Any(x => x.ToString() == book.Id.ToString());
+
+            if (!alreadyExists)
+            {
+                await _database.ListRightPushAsync("books:all", book.Id);
+            }
+        }
+
         public async Task<bool> BorrowBookAsync(int id)
         {
             var book = await GetBookByIdAsync(id);
@@ -77,9 +92,12 @@ namespace DataAccess.Repositories.Classes
             var json = JsonSerializer.Serialize(book);
             await _database.StringSetAsync($"book:{book.Id}", json);
 
-            var existing = await _database.ListPositionAsync(keyList, book.Id);
-            if (existing == null)
-                await _database.ListRightPushAsync(keyList, book.Id);
+            // Manual check to avoid Redis LPOS
+            var allIds = await _database.ListRangeAsync("books:all");
+            if (!allIds.Any(x => x.ToString() == book.Id.ToString()))
+            {
+                await _database.ListRightPushAsync("books:all", book.Id);
+            }
         }
     }
 }   

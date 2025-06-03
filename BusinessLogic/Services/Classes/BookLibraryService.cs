@@ -17,13 +17,13 @@ namespace BusinessLogic.Services.Classes
         public async Task<IEnumerable<BookDto>> GetAllBooksAsync()
         {
             var books = await _repo.GetAllBooksAsync();
-            return _mapper.Map<List<BookDto>>(books);
+            return _mapper.Map<IEnumerable<BookDto>>(books);
         }
 
         public async Task<IEnumerable<BookDto>> FilterBooksAsync(bool? isBorrowed, DateTime? borrowDate, DateTime? returnDate)
         {
             var books = await _repo.FilterBooksAsync(isBorrowed, borrowDate, returnDate);
-            return _mapper.Map<List<BookDto>>(books);
+            return _mapper.Map<IEnumerable<BookDto>>(books);
         }
 
         public async Task<BookDto?> GetBookByIdAsync(int id)

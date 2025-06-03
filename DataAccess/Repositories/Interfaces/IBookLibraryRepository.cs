@@ -12,6 +12,7 @@ namespace DataAccess.Repositories.Interfaces
         Task<IEnumerable<Book>> GetAllBooksAsync();
         Task<IEnumerable<Book>> FilterBooksAsync(bool? isBorrowed, DateTime? borrowDate, DateTime? returnDate);
         Task<Book?> GetBookByIdAsync(int id);
+        Task AddBookAsync(Book book);
         Task<bool> BorrowBookAsync(int id);
         Task<bool> ReturnBookAsync(int id);
     }

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic.Services.Classes
 {
-    public class BookService(IUnitOfWork _unitOfWork, IMapper _mapper) : IBookService
+    public class BookService(IUnitOfWork _unitOfWork, IMapper _mapper, IBookLibraryRepository _libraryRepo) : IBookService
     {
         public async Task<IEnumerable<BookDto>> GetAllAsync()
         {
@@ -31,7 +31,11 @@ namespace BusinessLogic.Services.Classes
 
             await _unitOfWork.BookRepository.AddAsync(book);
             _unitOfWork.SaveChanges();
-            return true;   
+
+            // Add book to Redis library
+            await _libraryRepo.AddBookAsync(book);
+
+            return true;
         }
 
         public async Task<bool> UpdateAsync(UpdateBookDto dto)
