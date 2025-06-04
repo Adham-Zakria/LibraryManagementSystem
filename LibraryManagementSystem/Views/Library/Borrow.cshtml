@@ -17,7 +17,7 @@
         </select>
     </div>
 
-    <div id="bookStatus" class="mt-2 text-info"></div>
+    <partial name="_BookStatus" />
 
     <button type="submit" class="btn btn-primary mt-3" id="borrowBtn">Borrow</button>
     <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
@@ -53,5 +53,5 @@
                 });
             });
         });
-    </script> @* - jQuery for real-time book status display *@
+    </script> @* - jQuery for real-time book status display *@
 }
