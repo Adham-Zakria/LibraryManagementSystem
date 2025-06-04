@@ -1,0 +1,22 @@
+[
+  {
+    "Id": 1,
+    "Title": "Chronicles of Time",
+    "Genre": 3,
+    "Description": "A sci-fi epic spanning multiple galaxies.",
+    "AuthorId": 2,
+    "BorrowedDate": null,
+    "ReturnedDate": null,
+    "IsBorrowed": false
+  },
+  {
+    "Id": 2,
+    "Title": "Echoes of Egypt",
+    "Genre": 1,
+    "Description": "Historical drama set in ancient Thebes.",
+    "AuthorId": 1,
+    "BorrowedDate": null,
+    "ReturnedDate": null,
+    "IsBorrowed": false
+  }
+]

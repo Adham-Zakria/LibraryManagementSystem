@@ -4,6 +4,7 @@ using BusinessLogic.Services.Interfaces;
 using DataAccess.Contexts;
 using DataAccess.Repositories.Classes;
 using DataAccess.Repositories.Interfaces;
+using DataAccess.Seeding;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
 using System.Configuration;
@@ -12,7 +13,7 @@ namespace LibraryManagementSystem
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -43,6 +44,8 @@ namespace LibraryManagementSystem
 
             var app = builder.Build();
 
+            await DbInitializer(app);
+
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
@@ -63,6 +66,15 @@ namespace LibraryManagementSystem
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+        }
+
+        public static async Task DbInitializer(WebApplication app)
+        {
+            using var scope = app.Services.CreateScope();
+            var services = scope.ServiceProvider;
+            var context = services.GetRequiredService<LibraryDbContext>();
+
+            await Seeder.SeedAsync(context);
         }
     }
 }

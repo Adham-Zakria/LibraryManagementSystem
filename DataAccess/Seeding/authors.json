@@ -1,0 +1,16 @@
+[
+  {
+    "Id": 1,
+    "FullName": "Mona Magdy Gamal Elsayed",
+    "Email": "mona@example.com",
+    "Website": "https://mona-author.com",
+    "Bio": "Award-winning novelist focused on historical fiction."
+  },
+  {
+    "Id": 2,
+    "FullName": "Mohamed Ali Adel Ahmed",
+    "Email": "mohamed@example.com",
+    "Website": "https://mohamed-writes.com",
+    "Bio": "Sci-fi author and lecturer at Cairo University."
+  }
+]
