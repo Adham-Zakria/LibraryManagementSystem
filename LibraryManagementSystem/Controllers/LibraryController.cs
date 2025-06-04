@@ -13,15 +13,16 @@ namespace Presentation.Controllers
 
         public async Task<IActionResult> Borrow(int id)
         {
-            var book = await _libraryService.GetBookByIdAsync(id);
-            return book == null ? NotFound() : View(book);
+            var books = await _libraryService.GetAllBooksAsync();
+            ViewBag.Books = books;
+            return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> BorrowConfirmed(int id)
         {
-            var success = await _libraryService.BorrowBookAsync(id);
-            return RedirectToAction(nameof(Index));
+            await _libraryService.BorrowBookAsync(id);
+            return Ok();
         }
 
         public async Task<IActionResult> Return(int id)

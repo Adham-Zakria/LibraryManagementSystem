@@ -37,7 +37,7 @@ namespace LibraryManagementSystem
 
             builder.Services.AddScoped<IBookLibraryRepository, BookLibraryRepository>();
             builder.Services.AddScoped<IBookLibraryService, BookLibraryService>();
-
+            builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
             #endregion
 

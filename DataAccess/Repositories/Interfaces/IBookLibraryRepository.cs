@@ -15,5 +15,7 @@ namespace DataAccess.Repositories.Interfaces
         Task AddBookAsync(Book book);
         Task<bool> BorrowBookAsync(int id);
         Task<bool> ReturnBookAsync(int id);
+        Task UpdateBookAsync(Book book);
+        Task DeleteBookAsync(int bookId);
     }
 }

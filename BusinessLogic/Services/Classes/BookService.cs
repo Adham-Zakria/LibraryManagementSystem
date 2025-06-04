@@ -34,7 +34,7 @@ namespace BusinessLogic.Services.Classes
 
             // Add book to Redis library
             await _libraryRepo.AddBookAsync(book);
-
+            
             return true;
         }
 
@@ -47,6 +47,10 @@ namespace BusinessLogic.Services.Classes
 
             _unitOfWork.BookRepository.Update(book);
             _unitOfWork.SaveChanges();
+
+            // update the book in Redis library
+            await _libraryRepo.UpdateBookAsync(book);
+
             return true;           
         }
 
@@ -57,6 +61,10 @@ namespace BusinessLogic.Services.Classes
 
             _unitOfWork.BookRepository.Remove(book);
             _unitOfWork.SaveChanges();
+
+            // Delete the book from Redis library
+            await _libraryRepo.DeleteBookAsync(book.Id);
+
             return true;
         }
     }

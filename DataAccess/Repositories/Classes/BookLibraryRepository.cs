@@ -4,6 +4,7 @@ using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -54,7 +55,7 @@ namespace DataAccess.Repositories.Classes
             var json = JsonSerializer.Serialize(book);
             await _database.StringSetAsync($"book:{book.Id}", json);
 
-            // Workaround: manually check if the ID exists in the Redis list
+            // check if the ID exists in the Redis list
             var bookIds = await _database.ListRangeAsync("books:all");
             bool alreadyExists = bookIds.Any(x => x.ToString() == book.Id.ToString());
 
@@ -87,12 +88,23 @@ namespace DataAccess.Repositories.Classes
             return true;
         }
 
+        public async Task UpdateBookAsync(Book book)
+        {
+            var json = JsonSerializer.Serialize(book);
+            await _database.StringSetAsync($"book:{book.Id}", json);
+        }
+
+        public async Task DeleteBookAsync(int bookId)
+        {
+            await _database.KeyDeleteAsync($"book:{bookId}");
+            await _database.ListRemoveAsync("books:all", bookId);
+        }
+
         private async Task SaveBookAsync(Book book)
         {
             var json = JsonSerializer.Serialize(book);
             await _database.StringSetAsync($"book:{book.Id}", json);
 
-            // Manual check to avoid Redis LPOS
             var allIds = await _database.ListRangeAsync("books:all");
             if (!allIds.Any(x => x.ToString() == book.Id.ToString()))
             {

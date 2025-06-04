@@ -1,20 +1,25 @@
-﻿@model BookDto
-@{
-    ViewBag.Title = "Borrow Book";
-}
-<h2>Borrow Book</h2>
-<form asp-action="BorrowConfirmed" asp-route-id="@Model.Id" method="post">
-    <div class="form-group">
-        <label>Title:</label>
-        <p>@Model.Title</p>
-    </div>
-    <div class="form-group">
-        <label>Author:</label>
-        <p>@Model.AuthorName</p>
-    </div>
-    <div id="bookStatus" class="alert mt-2"></div>
+﻿@{
+    ViewBag.Title = "Borrow a Book";
 
-    <button type="submit" class="btn btn-success mt-3" id="borrowBtn">Confirm Borrow</button>
+    var books = ViewBag.Books as List<BookDto>;
+}
+
+<h2>Borrow Book</h2>
+
+<form id="borrowForm" method="post">
+    <div class="form-group">
+        <label for="bookSelect">Select a Book</label>
+        <select id="bookSelect" name="bookId" class="form-control">
+            @foreach (var book in books)
+            {
+                <option value="@book.Id">@book.Title</option>
+            }
+        </select>
+    </div>
+
+    <div id="bookStatus" class="mt-2 text-info"></div>
+
+    <button type="submit" class="btn btn-primary mt-3" id="borrowBtn">Borrow</button>
     <a asp-action="Index" class="btn btn-secondary mt-3">Cancel</a>
 </form>
 
@@ -24,17 +29,29 @@
         function updateBookStatus(bookId) {
             $.get('/Library/GetBookStatus', { id: bookId }, function (data) {
                 const status = data.isBorrowed ? "Checked Out" : "Available";
-                const statusClass = data.isBorrowed ? "alert-danger" : "alert-success";
-                $('#bookStatus').removeClass().addClass("alert " + statusClass).text(status);
+                const className = data.isBorrowed ? "text-danger" : "text-success";
+
+                $('#bookStatus').text(status).removeClass("text-danger text-success").addClass(className);
                 $('#borrowBtn').prop('disabled', data.isBorrowed);
             });
         }
 
         $(document).ready(function () {
-            updateBookStatus(@Model.Id);
-        });
-    </script>
+            const initialId = $('#bookSelect').val();
+            updateBookStatus(initialId);
 
-    @* - jQuery for real-time book status display
-       - Bootstrap badges for status styling *@
+            $('#bookSelect').on('change', function () {
+                const selectedId = $(this).val();
+                updateBookStatus(selectedId);
+            });
+
+            $('#borrowForm').on('submit', function (e) {
+                e.preventDefault();
+                const bookId = $('#bookSelect').val();
+                $.post('/Library/BorrowConfirmed', { id: bookId }, function () {
+                    location.href = '/Library';
+                });
+            });
+        });
+    </script> @* - jQuery for real-time book status display *@
 }
